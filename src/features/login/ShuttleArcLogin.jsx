@@ -23,7 +23,7 @@ export const ShuttleArcLogin = () => {
       console.log("logging...")
       const response = await axios({
         method: "POST",
-        url: `${API_URL}/users/authenticate`,
+        url: `${API_URL}/users-social/checkUserShuttleArcCredentials`,
         headers: {
           email: userEmail,
           password: userPassword,

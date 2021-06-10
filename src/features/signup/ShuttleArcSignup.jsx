@@ -12,13 +12,15 @@ export const ShuttleArcSignup = () => {
   const initialRef = useRef(null);
   useEffect(() => initialRef.current.focus(), []);
 
-  const signUpUser = async () => {
+  const signUpUser = async (e) => {
+    e.preventDefault()
     try {
       const response = await axios({
         method: "POST",
-        url: `${API_URL}/shuttlearc-signup`,
+        url: `${API_URL}/users-social/shuttlearc-signup`,
         data: {
           userName,
+          userId:"60bc960eba143a5a6889c254"
         },
       });
       console.log(response);
