@@ -3,14 +3,15 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { API_URL, setupAuthHeaderForServiceCalls } from "../utils";
 
-const getUserDetailsFromLocalStorage = () => {
+export const getUserDetailsFromLocalStorage = () => {
   const userDetails = JSON.parse(localStorage.getItem("userDetails")) || {
-    name: "",
     userId: null,
+    name: "",
     userName: "",
+    bio: "",
     token: null,
   };
-  console.log({userDetails})
+  console.log({ userDetails });
   return userDetails;
 };
 
@@ -39,6 +40,21 @@ export const loginWithCredentials = createAsyncThunk(
     }
   }
 );
+export const signUpButtonClicked=createAsyncThunk("authentication/signUpButtonClicked",async(signUpDetails)=>{
+  console.log(signUpDetails)
+  const response = await axios({
+    method:"POST",
+    url:`${API_URL}/users-social/signup`,
+    data:{
+        name:signUpDetails.name,
+        email:signUpDetails.userEmail,
+        password:signUpDetails.userPassword,
+        userName:signUpDetails.userName
+    }
+  })
+
+  return response.data
+})
 
 export const authenticationSlice = createSlice({
   name: "authentication",
@@ -52,6 +68,7 @@ export const authenticationSlice = createSlice({
       state.userId = null;
       state.userName = "";
       state.name = "";
+      state.bio = "";
       state.status = "idle";
       localStorage?.removeItem("userDetails");
       setupAuthHeaderForServiceCalls(null);
@@ -67,6 +84,7 @@ export const authenticationSlice = createSlice({
       state.userId = action.payload.userId;
       state.userName = action.payload.userName;
       state.name = action.payload.name;
+      state.bio = action.payload.bio;
       state.token = action.payload.token;
       setupAuthHeaderForServiceCalls(action.payload.token);
       localStorage?.setItem(
@@ -76,6 +94,7 @@ export const authenticationSlice = createSlice({
           userId: action.payload.userId,
           name: action.payload.name,
           userName: action.payload.userName,
+          bio:action.payload.bio
         })
       );
     },
@@ -84,6 +103,15 @@ export const authenticationSlice = createSlice({
       state.status = "rejected";
     },
   },
+  [signUpButtonClicked.pending]:(state)=>{
+    state.status="loading"
+  },
+  [signUpButtonClicked.fulfilled]:(state)=>{
+    state.status="fulfilled"
+  },
+  [signUpButtonClicked.rejected]:(state)=>{
+    state.status="rejected"
+  }
 });
 
 export const { logOutButtonClicked } = authenticationSlice.actions;

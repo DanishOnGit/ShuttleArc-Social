@@ -2,8 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_URL } from "../utils";
 
-export const createPost = createAsyncThunk(
-  "post/createPost",
+export const postButtonClicked = createAsyncThunk(
+  "post/postButtonClicked",
   async (postDetails) => {
     const response = await axios({
       method: "POST",
@@ -40,14 +40,14 @@ export const postSlice = createSlice({
   },
   reducers: {},
   extraReducers: {
-    [createPost.pending]: (state) => {
+    [postButtonClicked.pending]: (state) => {
       state.status = "loading";
     },
-    [createPost.fulfilled]: (state, action) => {
+    [postButtonClicked.fulfilled]: (state, action) => {
       state.status = "fulfilled";
       state.posts.unshift(action.payload.post);
     },
-    [createPost.rejected]: (state, action) => {
+    [postButtonClicked.rejected]: (state, action) => {
       state.status = "rejected";
     },
 

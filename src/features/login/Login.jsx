@@ -6,16 +6,18 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {useDispatch} from "react-redux"
 import {loginWithCredentials} from "../authentication/authenticationSlice"
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { colors } from "../../database";
 import { API_URL } from "../utils";
 
 export const Login = () => {
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
+  const initialRef = useRef();
   const navigate = useNavigate();
   const dispatch= useDispatch();
 
+  useEffect(()=>initialRef.current.focus(),[])
   return (
     <Flex width="full" align="center" justifyContent="center">
       <Box p={5} boxShadow="2xl">
@@ -27,6 +29,7 @@ export const Login = () => {
             <FormControl isRequired>
               <FormLabel>Email</FormLabel>
               <Input
+              ref={initialRef}
                 value={userEmail}
                 onChange={(e) => setUserEmail(e.target.value)}
                 type="email"

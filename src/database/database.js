@@ -10,6 +10,7 @@ export const colors = {
     700: "#6B6B69",
     600: "#8A8987",
     500: "#A1A09D",
+    400: "#EDECE8",
   },
 };
 export const fonts = {

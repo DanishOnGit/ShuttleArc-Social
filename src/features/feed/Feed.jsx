@@ -2,18 +2,15 @@ import { Box, Text } from "@chakra-ui/layout";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import { FeedCard } from "./FeedCard";
-import { createPost, getAllPosts } from "../posts/postSlice";
-import {
-  logOutButtonClicked,
-  useAuth,
-} from "../authentication/authenticationSlice";
+import { postButtonClicked, getAllPosts } from "../posts/postSlice";
+import { useAuth } from "../authentication/authenticationSlice";
 import { Grid } from "@chakra-ui/layout";
 import { GridItem } from "@chakra-ui/layout";
 import { colors } from "../../database";
-import { SimpleGrid } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { ComposePost } from "../posts/ComposePost";
+import { UserProfile } from "../profile/UserProfile";
 
 export const Feed = () => {
   const { posts, status } = useSelector((state) => state.posts);
@@ -21,28 +18,26 @@ export const Feed = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // if (status === "idle") {
-    //   dispatch(getAllPosts());
-    // }
     if (token) {
       dispatch(getAllPosts());
     }
   }, [token]);
 
   return (
-    <>
-      <Text>{userName}</Text>
-      <Grid
-        margin="1rem"
-        height="500px"
-        templateColumns="repeat(5, 1fr)"
-        gap={4}
+    <Grid maxWidth="66vw" margin="auto" templateColumns="1fr 5fr" gap={4}>
+      <GridItem
+        position="sticky"
+        display="flex"
+        flexDirection="column"
+        padding="1rem"
+        colSpan={1}
+        bg="gray.200"
       >
-        <GridItem colSpan={1} bg={colors.orange[500]}>
-          <ComposePost />
-          <Button onClick={() => dispatch(logOutButtonClicked())}>
-            Logout
-          </Button>
+        <ComposePost />
+      </GridItem>
+      <Grid templateColumns="1fr" rowGap="0.5rem">
+        <GridItem>
+          <UserProfile />
         </GridItem>
         {posts.length !== 0 &&
           posts.map((post) => (
@@ -51,6 +46,6 @@ export const Feed = () => {
             </GridItem>
           ))}
       </Grid>
-    </>
+    </Grid>
   );
 };

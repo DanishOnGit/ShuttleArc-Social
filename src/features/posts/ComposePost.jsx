@@ -16,14 +16,14 @@ import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { colors } from "../../database";
 import { useAuth } from "../authentication/authenticationSlice";
-import { createPost } from "./postSlice";
+import { postButtonClicked } from "./postSlice";
 
 export const ComposePost = () => {
   const [postContent, setPostContent] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef();
   const dispatch = useDispatch();
-  const{name,userName,userId} = useAuth();
+  const { name, userName, userId } = useAuth();
 
   return (
     <>
@@ -48,7 +48,7 @@ export const ComposePost = () => {
             <Flex>
               <Avatar
                 mr="0.5rem"
-                name="Oshigaki Kisame"
+                name={name}
                 src="https://bit.ly/broken-link"
               />
               <Textarea
@@ -62,7 +62,12 @@ export const ComposePost = () => {
           </ModalBody>
           <ModalFooter>
             <Button
-              onClick={() => dispatch(createPost({postContent,userId}))}
+              onClick={() => {
+                dispatch(postButtonClicked({ postContent, userId }));
+                setPostContent("");
+                onClose()
+              }}
+              
               isDisabled={!postContent ? true : false}
               bgColor={colors.orange[600]}
               _hover={{ bgColor: colors.orange[700] }}
