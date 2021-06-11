@@ -11,6 +11,7 @@ import { Button } from "@chakra-ui/button";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { ComposePost } from "../posts/ComposePost";
 import { UserProfile } from "../profile/UserProfile";
+import { getFollowingStatus } from "../profile/profileSlice";
 
 export const Feed = () => {
   const { posts, status } = useSelector((state) => state.posts);
@@ -20,6 +21,7 @@ export const Feed = () => {
   useEffect(() => {
     if (token) {
       dispatch(getAllPosts());
+      dispatch(getFollowingStatus())
     }
   }, [token]);
 

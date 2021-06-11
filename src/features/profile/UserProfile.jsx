@@ -4,20 +4,18 @@ import { EditIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { Box, Flex, Text } from "@chakra-ui/layout";
 import { colors, fonts } from "../../database";
+import { useAuth } from "../authentication/authenticationSlice";
 
 export const UserProfile = () => {
+  const { name, bio } = useAuth();
   return (
     <Box textAlign="left" border="1px solid black" p="5rem 0.5rem 2rem">
       <Box>
         <Flex>
-          <Avatar
-            size="2xl"
-            name="Dan Abrahmov"
-            src="https://bit.ly/dan-abramov"
-          />
+          <Avatar size="2xl" name={name} src="https://bit.ly/dan-abramov" />
           <Box ml="1rem">
             <Flex mb="0.5rem">
-              <Text fontWeight={fonts.fontweight.bold}>danabromov</Text>
+              <Text fontWeight={fonts.fontweight.bold}>{name}</Text>
               <Link to="/edit-Profile">
                 <Button
                   rightIcon={<EditIcon />}
@@ -37,12 +35,7 @@ export const UserProfile = () => {
               <Text>25 Followers</Text>
             </Flex>
             <Flex mt="1rem">
-              <Text>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                minima pariatur voluptatem possimus obcaecati soluta consectetur
-                in natus odio nobis facere perspiciatis nihil, fugiat
-                reprehenderit dicta corrupti exercitationem ab ullam?
-              </Text>
+              <Text>{bio}</Text>
             </Flex>
           </Box>
         </Flex>

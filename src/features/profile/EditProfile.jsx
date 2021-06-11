@@ -12,11 +12,12 @@ import { useState } from "react";
 
 export const EditProfile = () => {
   
-  const {name,userName,bio} = useSelector(state=>state.profile)
+  // const {name,userName,bio} = useSelector(state=>state.profile)
+  const {token,name,userName,bio} = useAuth();
   const [newName,setNewName] = useState(name);
   const [newUserName,setNewUserName] =useState(userName);
   const [newBio,setNewBio] = useState(bio);
-  const {token} = useAuth();
+  
   const dispatch = useDispatch();
   
   useEffect(()=>{
