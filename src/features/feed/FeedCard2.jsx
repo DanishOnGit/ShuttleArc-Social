@@ -17,49 +17,25 @@ import { followButtonClicked, viewingUserProfile } from "../profile/profileSlice
 import { useAuth } from "../authentication/authenticationSlice";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getMonthAndDay } from "./FeedCard";
 
-export const getMonthAndDay = (date) => {
-  const monthList = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  date = new Date(date);
-  const day = date.getDay();
-  const month = date.getMonth();
-
-  return `${monthList[month - 1]} ${day}`;
-};
-
-export const FeedCard = ({ post }) => {
-  const profile = useSelector((state) => state.profile);
-  const { userName, token } = useAuth();
-  const dispatch = useDispatch();
-  console.log({ post });
-
-   const checkIfAlreadyFollowing = () => {
-    console.log("Running chcekIfAlradyFollowing", profile.following);
-    if (profile.following.find((id) => id == post.userId._id)) {
-      return "Unfollow";
-    }
-    return "Follow";
-  };
-
-  return (
+export const FeedCard2=({post,name,userName})=>{
+    const profile = useSelector((state) => state.profile);
+      const{userId} = useAuth();
+      const dispatch = useDispatch();
+      const checkIfAlreadyFollowing = () => {
+        console.log("Running chcekIfAlradyFollowing", profile.following);
+        if (profile.following.find((id) => id == post.userId._id)) {
+          return "Unfollow";
+        }
+        return "Follow";
+      };
+return(
     <Box>
       <Box border="1px solid black" p="0.75rem">
         <Flex>
           <Avatar
-            name={post.userId.userId.name}
+            name={name}
             src="https://bit.ly/broken-link"
           />
           <Box textAlign="left" p="0rem 1rem">
@@ -68,7 +44,7 @@ export const FeedCard = ({ post }) => {
                 <Link to={`/${post.userId.userName}/profile`}>
                   <Text onClick={()=>dispatch(viewingUserProfile(post.userId))} fontWeight={fonts.fontweight.bold}>
                     {" "}
-                    {post.userId.userId.name}
+                    {name}
                   </Text>
                 </Link>
                 <Text
@@ -77,7 +53,7 @@ export const FeedCard = ({ post }) => {
                   fontWeight={fonts.fontweight.light}
                 >
                   {" "}
-                  @{post?.userId?.userName}
+                  @{userName}
                 </Text>
                 <Text
                   color={colors.grey[500]}
@@ -87,10 +63,7 @@ export const FeedCard = ({ post }) => {
                   {getMonthAndDay(post.createdAt)}
                 </Text>
               </Flex>
-              {post.userId.userName === userName ? (
-                <></>
-              ) : (
-                <Menu>
+              <Menu>
                   <MenuButton
                     as={IconButton}
                     aria-label="Options"
@@ -106,14 +79,13 @@ export const FeedCard = ({ post }) => {
                     </MenuItem>
                   </MenuList>
                 </Menu>
-              )}
             </Flex>
             <Box>
               <Text mb="0.5rem">{post.content}</Text>
             </Box>
             <IconButton
               onClick={() => dispatch(likeButtonClicked(post._id))}
-              color={post.isLikedByUser ? "red" : ""}
+              color={post.likedBy.find(id=>id==userId) ? "red" : ""}
               aria-label="Search database"
               icon={<i class="far fa-heart"></i>}
             />
@@ -121,7 +93,5 @@ export const FeedCard = ({ post }) => {
         </Flex>
       </Box>
     </Box>
-  );
-};
-
-// post.userId.userName===userName
+)
+}

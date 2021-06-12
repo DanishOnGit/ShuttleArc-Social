@@ -10,12 +10,13 @@ import { colors } from "../../database";
 import { Button } from "@chakra-ui/button";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { ComposePost } from "../posts/ComposePost";
-import { UserProfile } from "../profile/UserProfile";
+import { ProfileHeader } from "../profile/ProfileHeader";
 import { getFollowingStatus } from "../profile/profileSlice";
 
 export const Feed = () => {
   const { posts, status } = useSelector((state) => state.posts);
-  const { token, userName } = useAuth();
+  const { token, userName,name,bio } = useAuth();
+  console.log("From Feed..",name,bio,userName)
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -39,7 +40,7 @@ export const Feed = () => {
       </GridItem>
       <Grid templateColumns="1fr" rowGap="0.5rem">
         <GridItem>
-          <UserProfile />
+          <ProfileHeader name={name} userName={userName} bio={bio} />
         </GridItem>
         {posts.length !== 0 &&
           posts.map((post) => (

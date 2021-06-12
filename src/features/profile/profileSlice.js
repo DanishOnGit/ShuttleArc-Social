@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { useSelector } from "react-redux";
 import { getUserDetailsFromLocalStorage } from "../authentication/authenticationSlice";
 import { API_URL } from "../utils";
 
@@ -50,11 +51,28 @@ export const getFollowingStatus=createAsyncThunk("profile/getFollowingStatus",as
   return response.data
 })
 
+export const viewingUserProfile=createAsyncThunk("profile/viewingUserProfile",async(userDetails)=>{
+  const response = await axios({
+    method:"POST",
+    url:`${API_URL}/users-social/${userDetails.userName}/profile`,
+    data:{
+          userName:userDetails.userName,
+          userId:userDetails.userId
+    }
+  })
+  return response.data
+})
+
 export const profileSlice = createSlice({
   name: "profile",
   initialState: {
     status: "idle",
     following: [],
+    name:"",
+    userName:"",
+    followers:[],
+    bio:"",
+    posts:[]
   },
   reducers: {},
   extraReducers: {
@@ -105,8 +123,28 @@ export const profileSlice = createSlice({
     [getFollowingStatus.rejected]: (state, action) => {
       state.status = "rejected";
       console.log("follow button clicked", action.payload);
-    }
+    },
+    [viewingUserProfile.pending]:(state)=>{
+      state.status="loading";
+    },
+    [viewingUserProfile.fulfilled]:(state,action)=>{
+      state.status="fulfilled";
+      state.name = action.payload.name
+      state.userName = action.payload.socialUser.userName
+      state.bio=action.payload.socialUser.bio
+      state.followers = action.payload.socialUser.followers
+      state.posts = action.payload.posts
+      console.log("Viewing profile...",action.payload)
+    },
+    [viewingUserProfile.rejected]:(state,action)=>{
+      state.status="rejected";
+      console.log("Error Viewing profile...",action.payload)
+    },
+
   },
 });
 
+export const useProfile =()=>{
+  return useSelector(state=>state.profile)
+}
 export default profileSlice.reducer;
