@@ -30,10 +30,9 @@ export const getMonthAndDay = (date) => {
     "Dec",
   ];
   date = new Date(date);
-  const day = date.getDay();
+  const day = date.getDate();
   const month = date.getMonth();
-
-  return `${monthList[month - 1]} ${day}`;
+  return `${monthList[month]} ${day}`;
 };
 
 export const FeedCard = ({ post }) => {

@@ -110,8 +110,6 @@ export const NavBar = () => {
           Profile
         </MenuButton>
         <MenuList>
-          <MenuItem>Posts</MenuItem>
-          <MenuItem>Likes</MenuItem>
           <MenuDivider />
           <MenuItem
             onClick={() => dispatch(logOutButtonClicked())}
