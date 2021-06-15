@@ -39,17 +39,6 @@ export const followUnfollowButtonClickedOnProfileHeader = createAsyncThunk(
   }
 );
 
-export const getFollowingStatus = createAsyncThunk(
-  "profile/getFollowingStatus",
-  async () => {
-    const response = await axios({
-      method: "GET",
-      url: `${API_URL}/users-social/following`,
-    });
-    return response.data;
-  }
-);
-
 export const viewingUserProfile = createAsyncThunk(
   "profile/viewingUserProfile",
   async (userDetails) => {
@@ -114,16 +103,7 @@ export const profileSlice = createSlice({
     [followUnfollowButtonClickedOnProfileHeader.rejected]: (state, action) => {
       state.status = "rejected";
     },
-    [getFollowingStatus.pending]: (state) => {
-      state.status = "loading";
-    },
-    [getFollowingStatus.fulfilled]: (state, action) => {
-      state.status = "fulfilled";
-      state.following = action.payload.following;
-    },
-    [getFollowingStatus.rejected]: (state, action) => {
-      state.status = "rejected";
-    },
+    
     [viewingUserProfile.pending]: (state) => {
       state.status = "loading";
     },
