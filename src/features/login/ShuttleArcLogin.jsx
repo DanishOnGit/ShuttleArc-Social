@@ -14,13 +14,11 @@ export const ShuttleArcLogin = () => {
   const navigate = useNavigate();
   const initialRef = useRef(null);
 
-  useEffect(()=>initialRef.current.focus()
-  ,[])
+  useEffect(() => initialRef.current.focus(), []);
 
   const shuttleArcLogin = async (e) => {
     try {
       e.preventDefault();
-      console.log("logging...")
       const response = await axios({
         method: "POST",
         url: `${API_URL}/users-social/shuttlearc-login-authentication`,
@@ -30,7 +28,6 @@ export const ShuttleArcLogin = () => {
         },
       });
       if (response.status === 200) {
-        console.log("Accepted")
         navigate("/shuttlearc-signup");
       }
     } catch (error) {
@@ -48,7 +45,7 @@ export const ShuttleArcLogin = () => {
             <FormControl isRequired>
               <FormLabel>Email</FormLabel>
               <Input
-              ref={initialRef}
+                ref={initialRef}
                 value={userEmail}
                 onChange={(e) => setUserEmail(e.target.value)}
                 type="email"

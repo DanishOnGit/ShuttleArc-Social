@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { getUserDetailsFromLocalStorage } from "../authentication/authenticationSlice";
 import { API_URL } from "../utils";
 
 export const getAllSocialUsers = createAsyncThunk(
@@ -18,7 +17,6 @@ export const getAllSocialUsers = createAsyncThunk(
 export const editProfileClicked = createAsyncThunk(
   "profile/editProfileClicked",
   async () => {
-    console.log(getUserDetailsFromLocalStorage().name);
     const response = await axios({
       method: "GET",
       url: `${API_URL}/users-social/profile`,
@@ -27,17 +25,19 @@ export const editProfileClicked = createAsyncThunk(
   }
 );
 
-// export const saveButtonClicked = createAsyncThunk(
-//   "profile/saveButtonClicked",
-//   async (updatedData) => {
-//     const response = await axios({
-//       method: "POST",
-//       url: `${API_URL}/users-social/profile`,
-//       data: { ...updatedData },
-//     });
-//     return response.data;
-//   }
-// );
+export const followUnfollowButtonClickedOnProfileHeader = createAsyncThunk(
+  "profile/followUnfollowButtonClickedOnProfileHeader",
+  async (userId) => {
+    await axios({
+      method: "POST",
+      url: `${API_URL}/users-social/following`,
+      data: {
+        userId: userId._id,
+      },
+    });
+    return { loggedInUsersId: userId.loggedInUsersId };
+  }
+);
 
 export const getFollowingStatus = createAsyncThunk(
   "profile/getFollowingStatus",
@@ -55,7 +55,7 @@ export const viewingUserProfile = createAsyncThunk(
   async (userDetails) => {
     const response = await axios({
       method: "GET",
-      url: `${API_URL}/users-social/${userDetails.userName}/profile`
+      url: `${API_URL}/users-social/${userDetails.userName}/profile`,
     });
     return response.data;
   }
@@ -92,48 +92,37 @@ export const profileSlice = createSlice({
     },
     [editProfileClicked.fulfilled]: (state, action) => {
       state.status = "fulfilled";
-      console.log("edit prpofile clicked", action.payload);
     },
     [editProfileClicked.rejected]: (state, action) => {
       state.status = "rejected";
-      console.log("edit prpofile clicked", action.payload);
     },
 
-    // [saveButtonClicked.pending]: (state) => {
-    //   state.status = "loading";
-    // },
-    // [saveButtonClicked.fulfilled]: (state, action) => {
-    //   state.status = "fulfilled";
-    //   console.log("save button clicked", action.payload);
-    // },
-    // [saveButtonClicked.rejected]: (state, action) => {
-    //   state.status = "rejected";
-    //   console.log("save button clicked", action.payload);
-    // },
-
-    // [followUnfollowButtonClicked.pending]: (state) => {
-    //   state.status = "loading";
-    // },
-    // [followUnfollowButtonClicked.fulfilled]: (state, action) => {
-    //   console.log("logging payload...", action.payload);
-    //   state.status = "fulfilled";
-    //   state.following.push(action.payload.idFollowed);
-    // },
-    // [followUnfollowButtonClicked.rejected]: (state, action) => {
-    //   state.status = "rejected";
-    //   console.log("follow button clicked", action.payload);
-    // },
+    [followUnfollowButtonClickedOnProfileHeader.pending]: (state) => {
+      state.status = "loading";
+    },
+    [followUnfollowButtonClickedOnProfileHeader.fulfilled]: (state, action) => {
+      console.log("From foUnfoProHeader", action.payload);
+      state.status = "fulfilled";
+      if (state.followers.includes(action.payload.loggedInUsersId)) {
+        state.followers = state.followers.filter(
+          (id) => id !== action.payload.loggedInUsersId
+        );
+      } else {
+        state.followers.push(action.payload.loggedInUsersId);
+      }
+    },
+    [followUnfollowButtonClickedOnProfileHeader.rejected]: (state, action) => {
+      state.status = "rejected";
+    },
     [getFollowingStatus.pending]: (state) => {
       state.status = "loading";
     },
     [getFollowingStatus.fulfilled]: (state, action) => {
-      console.log("logging curent state", action.payload);
       state.status = "fulfilled";
       state.following = action.payload.following;
     },
     [getFollowingStatus.rejected]: (state, action) => {
       state.status = "rejected";
-      console.log("follow button clicked", action.payload);
     },
     [viewingUserProfile.pending]: (state) => {
       state.status = "loading";
@@ -151,14 +140,13 @@ export const profileSlice = createSlice({
     },
     [viewingUserProfile.rejected]: (state, action) => {
       state.status = "rejected";
-      console.log("Error Viewing profile...", action.payload);
     },
     [getAllSocialUsers.pending]: (state) => {
       state.status = "loading";
     },
     [getAllSocialUsers.fulfilled]: (state, action) => {
       state.status = "fulfilled";
-      console.log("Getting all users...", action.payload);
+
       state.allSocialUsers = action.payload.updatedSocialUsers;
     },
     [getAllSocialUsers.rejected]: (state) => {

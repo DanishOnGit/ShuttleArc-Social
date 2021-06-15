@@ -4,7 +4,7 @@ export const colors = {
     700: "#fc452e",
     600: "#DB4F40",
     500: "#DB584C",
-    400:"#DAB0AD"
+    400: "#DAB0AD",
   },
   grey: {
     900: "#5E5E5C",

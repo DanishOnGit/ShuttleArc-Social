@@ -18,29 +18,13 @@ export const postButtonClicked = createAsyncThunk(
   }
 );
 
-// export const followUnfollowButtonClickedOnFeedCard = createAsyncThunk(
-//   "profile/followUnfollowButtonClicked",
-//   async (userId) => {
-//     console.log("Id to be followed is...", userId);
-//     const response = await axios({
-//       method: "POST",
-//       url: `${API_URL}/users-social/following`,
-//       data: {
-//         userId: userId._id,
-//       },
-//     });
-//     return response.data;
-//   }
-// );
-
 export const getAllPosts = createAsyncThunk("post/getAllPosts", async () => {
   const response = await axios.get(`${API_URL}/posts`);
-  console.log({ response });
   return response.data;
 });
 
 export const likeButtonClicked=createAsyncThunk("post/likeButtonClicked",async(postId)=>{
-  const response = await axios ({
+   await axios ({
     method:"POST",
     url:`${API_URL}/posts/${postId}`
   })
@@ -50,7 +34,7 @@ export const likeButtonClicked=createAsyncThunk("post/likeButtonClicked",async(p
 export const postSlice = createSlice({
   name: "post",
   initialState: {
-    // status: "idle",
+    status: "idle",
     error: null,
     posts: [],
   },
@@ -81,7 +65,7 @@ export const postSlice = createSlice({
     },
     [likeButtonClicked.fulfilled]: (state, action) => {
       state.status = "fulfilled";
-      const postIndex = state.posts.findIndex(post=>post._id==action.payload)
+      const postIndex = state.posts.findIndex(post=>post._id===action.payload)
       state.posts[postIndex].isLikedByUser = !state.posts[postIndex].isLikedByUser
     },
     [likeButtonClicked.rejected]: (state) => {

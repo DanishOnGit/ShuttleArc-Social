@@ -3,11 +3,10 @@ import { IconButton } from "@chakra-ui/button";
 import { AddIcon } from "@chakra-ui/icons";
 import { Text } from "@chakra-ui/layout";
 import { Box, Flex } from "@chakra-ui/layout";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { colors, fonts } from "../../database";
 import { likeButtonClicked } from "../posts/postSlice";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
-import { useProfile, viewingUserProfile } from "../profile/profileSlice";
 import {
   followUnfollowButtonClickedOnFeedCard,
   useAuth,
@@ -39,25 +38,23 @@ export const getMonthAndDay = (date) => {
 
 export const FeedCard = ({ post }) => {
 
-  // const profile = useProfile();
   const { userName,following } = useAuth();
   const dispatch = useDispatch();
-  console.log({ post });
-
+ 
   return (
     <Box>
-      <Box border="1px solid black" p="0.75rem">
+      <Box boxShadow='0px 0px 10px 4px rgb(0 0 0 / 5%)'mt="1.5rem" p="0.75rem">
         <Flex>
-          <Avatar
+        <Link to={`/${post.userId.userName}/profile`}><Avatar
             name={post.userId.userId.name}
             src="https://bit.ly/broken-link"
-          />
+          /></Link>
           <Box textAlign="left" p="0rem 1rem">
             <Flex mb="0.5rem" justifyContent="space-between">
               <Flex>
                 <Link to={`/${post.userId.userName}/profile`}>
                   <Text
-                    onClick={() => dispatch(viewingUserProfile(post.userId))}
+                    
                     fontWeight={fonts.fontweight.bold}
                   >
                     {" "}
@@ -121,4 +118,3 @@ export const FeedCard = ({ post }) => {
   );
 };
 
-// post.userId.userName===userName

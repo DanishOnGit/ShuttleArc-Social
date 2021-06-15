@@ -1,13 +1,12 @@
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
-import { Box, Heading } from "@chakra-ui/layout";
+import { Box } from "@chakra-ui/layout";
 import { Flex, Textarea } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { colors } from "../../database";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
-  loadUserDetails,
   useAuth,
   saveButtonClicked,
 } from "../authentication/authenticationSlice";
@@ -26,7 +25,7 @@ export const EditProfile = () => {
     if (token) {
       dispatch(editProfileClicked());
     }
-  }, [token]);
+  }, [token, dispatch]);
 
   return (
     <Box maxWidth="50vw" m="auto">

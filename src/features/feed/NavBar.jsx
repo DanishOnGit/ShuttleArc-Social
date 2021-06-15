@@ -1,4 +1,11 @@
-import { Box, Flex, Text, Input, Button } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Text,
+  Input,
+  Button,
+  useDisclosure,
+} from "@chakra-ui/react";
 import {
   Menu,
   MenuButton,
@@ -20,35 +27,33 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { logOutButtonClicked } from "../authentication/authenticationSlice";
 import { colors } from "../../database";
-import { getAllSocialUsers, useProfile } from "../profile/profileSlice";
+import { useProfile } from "../profile/profileSlice";
+import { BasicProfileCard } from "../profile/BasicProfileCard";
 import { useRef, useState } from "react";
 
 export const NavBar = () => {
   const [searchText, setSearchText] = useState("");
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const initialFocusRef = useRef(null);
   const dispatch = useDispatch();
   const { allSocialUsers } = useProfile();
 
-  // const gettingAllUsers = () => {
-  //   let clearId;
-  //   return function getUsers() {
-  //     clearId = setTimeout(() => {
-  //       dispatch(getAllSocialUsers());
-  //     }, 300);
-  //     return function () {
-  //       clearTimeout(clearId);
-  //     };
-  //   };
-  // };
-
   const gettingAllUsers = (text) => {
-    const result = allSocialUsers.filter((user) => user.userId.name.includes(text));
-    return result;
+    if (!searchText) {
+      return [];
+    } else {
+      const result = allSocialUsers.filter((user) => {
+        const name = user.userId.name.toLowerCase();
+        const searchKeywords = text.toLowerCase();
+        return name.includes(searchKeywords);
+      });
+      return result;
+    }
   };
-  console.log("search result ", gettingAllUsers(searchText));
 
   return (
     <Flex
+      zIndex="2"
       p="1rem 0"
       position="sticky"
       maxWidth="66vw"
@@ -61,9 +66,10 @@ export const NavBar = () => {
         </Link>
       </Box>
 
-      <Popover initialFocusRef={initialFocusRef}>
+      <Popover isOpen={isOpen} initialFocusRef={initialFocusRef}>
         <PopoverTrigger>
           <Input
+            onClick={onOpen}
             ref={initialFocusRef}
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
@@ -75,26 +81,25 @@ export const NavBar = () => {
         </PopoverTrigger>
         <PopoverContent>
           <PopoverArrow />
-          <PopoverCloseButton />
-          <PopoverHeader>Confirmation!</PopoverHeader>
-          <PopoverBody>
+          <PopoverCloseButton
+            onClick={() => {
+              setSearchText("");
+              onClose();
+            }}
+          />
+          <PopoverHeader>Search Result</PopoverHeader>
+          <PopoverBody
+            onClick={() => {
+              setSearchText("");
+              onClose();
+            }}
+          >
             {gettingAllUsers(searchText).map((user) => (
-              <Box>
-                {user.userId.name} {user.userName}
-              </Box>
+              <BasicProfileCard user={user} />
             ))}
           </PopoverBody>
         </PopoverContent>
       </Popover>
-
-      {/* <Input
-      onClick=
-        onChange={() => gettingAllUsers()()}
-        width="40%"
-        placeholder="Search Users"
-        size="sm"
-        focusBorderColor={colors.orange[500]}
-      /> */}
 
       <Menu>
         <MenuButton

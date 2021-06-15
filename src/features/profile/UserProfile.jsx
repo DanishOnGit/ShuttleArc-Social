@@ -4,17 +4,17 @@ import { useDispatch } from "react-redux";
 import { ProfileHeader } from "./ProfileHeader";
 import { resetProfile, useProfile, viewingUserProfile } from "./profileSlice";
 import { FeedCard } from "../feed/FeedCard";
-import { usePost } from "../posts/postSlice";
-import { loadUserDetails } from "../authentication/authenticationSlice";
+import { useParams } from "react-router";
 
 export const UserProfile = () => {
-  const { name, userName, bio, followers, following } = useProfile();
-  const { posts } = usePost();
+  const { name, bio, followers, following, posts } = useProfile();
   const dispatch = useDispatch();
+  const { userName } = useParams();
+
   useEffect(() => {
-    dispatch(viewingUserProfile());
+    dispatch(viewingUserProfile({ userName }));
     return dispatch(resetProfile());
-  }, []);
+  }, [dispatch, userName]);
 
   return (
     <Grid maxWidth="66vw" margin="auto" templateColumns="1fr" rowGap="0.5rem">
@@ -25,16 +25,15 @@ export const UserProfile = () => {
           bio={bio}
           followers={followers}
           following={following}
+          postCount={posts.length}
         />{" "}
       </GridItem>
       {posts.length !== 0 &&
-        posts
-          .filter((post) => post.userId.userName === userName)
-          .map((post) => (
-            <GridItem colSpan={4}>
-              <FeedCard post={post} />
-            </GridItem>
-          ))}
+        posts.map((post) => (
+          <GridItem colSpan={4}>
+            <FeedCard post={post} />
+          </GridItem>
+        ))}
     </Grid>
   );
 };

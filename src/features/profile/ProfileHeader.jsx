@@ -2,33 +2,33 @@ import { Avatar } from "@chakra-ui/avatar";
 import { Button } from "@chakra-ui/button";
 import { AddIcon, EditIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
+import { Divider } from "@chakra-ui/react";
 import { Box, Flex, Text } from "@chakra-ui/layout";
 import { colors, fonts } from "../../database";
 import { useAuth } from "../authentication/authenticationSlice";
 import { useDispatch } from "react-redux";
-import { followUnfollowButtonClicked, useProfile } from "./profileSlice";
-import { usePost } from "../posts/postSlice";
-import { useEffect } from "react";
+import {
+  followUnfollowButtonClickedOnProfileHeader,
+  useProfile,
+} from "./profileSlice";
 
-export const ProfileHeader = ({ name, bio, userName,followers,following }) => {
-  // const profile = useProfile();
-  const { posts } = usePost();
-  const {
-    userName: currUsersUserName,
-    userId,
-    // followers,
-    // following,
-  } = useAuth();
-  // console.log("log from profile header", profile);
-  console.log("props from ProfileHeader", name, bio, userName,currUsersUserName,userName===currUsersUserName);
-  
+export const ProfileHeader = ({
+  name,
+  bio,
+  userName,
+  followers,
+  following,
+  postCount,
+}) => {
+  const { socialId } = useProfile();
+  const { userName: currUsersUserName, userId } = useAuth();
   const dispatch = useDispatch();
 
   const checkIfAlreadyFollowing = (currentUsersUserId) => {
-    return followers.find((id) => id == currentUsersUserId) ? true : false;
+    return followers.find((id) => id === currentUsersUserId) ? true : false;
   };
   return (
-    <Box textAlign="left" border="1px solid black" p="5rem 0.5rem 2rem">
+    <Box textAlign="left" p="5rem 0.5rem 2rem">
       <Box>
         <Flex>
           <Avatar size="2xl" name={name} src="https://bit.ly/broken-link" />
@@ -54,7 +54,14 @@ export const ProfileHeader = ({ name, bio, userName,followers,following }) => {
                 </Link>
               ) : (
                 <Button
-                  // onClick={() => dispatch(followUnfollowButtonClicked())}
+                  onClick={() =>
+                    dispatch(
+                      followUnfollowButtonClickedOnProfileHeader({
+                        _id: socialId,
+                        loggedInUsersId: userId,
+                      })
+                    )
+                  }
                   rightIcon={!checkIfAlreadyFollowing ? <AddIcon /> : null}
                   m="0 1rem"
                   borderRadius="3rem"
@@ -64,27 +71,16 @@ export const ProfileHeader = ({ name, bio, userName,followers,following }) => {
                   _hover={{ bgColor: colors.orange[400] }}
                 >
                   {checkIfAlreadyFollowing(userId) ? "Following" : "Follow"}
-                 
                 </Button>
               )}
             </Flex>
             <Flex>
               <Text>
-                {userName === currUsersUserName
-                  ? posts.filter((post) => post.userId._id == userId).length
-                  : posts.filter((post) => post.userId._id !== userId)
-                      .length}{" "}
-                      
+                {postCount}
                 Posts
               </Text>
-              <Text m="0 1rem">
-                { following.length}{" "}
-                Following
-              </Text>
-              <Text>
-                { followers.length}{" "}
-                Followers
-              </Text>
+              <Text m="0 1rem">{following.length} Following</Text>
+              <Text>{followers.length} Followers</Text>
             </Flex>
             <Flex mt="1rem">
               <Text>{bio}</Text>
@@ -92,6 +88,7 @@ export const ProfileHeader = ({ name, bio, userName,followers,following }) => {
           </Box>
         </Flex>
       </Box>
+      <Divider />
     </Box>
   );
 };

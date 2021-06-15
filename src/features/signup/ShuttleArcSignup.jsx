@@ -1,7 +1,7 @@
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
 import { useEffect, useRef, useState } from "react";
-import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
+import { Box, Flex, Heading } from "@chakra-ui/layout";
 import { colors } from "../../database";
 import axios from "axios";
 import { API_URL } from "../utils";
@@ -13,17 +13,16 @@ export const ShuttleArcSignup = () => {
   useEffect(() => initialRef.current.focus(), []);
 
   const signUpUser = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const response = await axios({
+       await axios({
         method: "POST",
         url: `${API_URL}/users-social/shuttlearc-signup`,
         data: {
           userName,
-          userId:"60bc960eba143a5a6889c254"
+          userId: "60bc960eba143a5a6889c254",
         },
       });
-      console.log(response);
     } catch (error) {
       console.log(error);
     }

@@ -6,14 +6,9 @@ import { API_URL, setupAuthHeaderForServiceCalls } from "../utils";
 export const getUserDetailsFromLocalStorage = () => {
   const userDetails = JSON.parse(localStorage.getItem("userDetails")) || {
     userId: null,
-    // name: "",
     userName: "",
-    // bio: "",
-    // followers: [],
-    // following: [],
     token: null,
   };
-  console.log({ userDetails });
   return userDetails;
 };
 
@@ -21,7 +16,7 @@ export const loginWithCredentials = createAsyncThunk(
   "authentication/loginWithCredentials",
   async (userDetails, { rejectWithValue }) => {
     try {
-      console.log("trying to log", userDetails);
+      
       const res = await axios({
         method: "POST",
         url: `${API_URL}/users-social/login`,
@@ -32,7 +27,7 @@ export const loginWithCredentials = createAsyncThunk(
       });
 
       if (res.status === 200) {
-        console.log("login success");
+        
         return res.data;
       }
       throw new Error("Error Occurred !");
@@ -45,7 +40,7 @@ export const loginWithCredentials = createAsyncThunk(
 export const signUpButtonClicked = createAsyncThunk(
   "authentication/signUpButtonClicked",
   async (signUpDetails) => {
-    console.log(signUpDetails);
+  
     const response = await axios({
       method: "POST",
       url: `${API_URL}/users-social/signup`,
@@ -87,7 +82,7 @@ export const saveButtonClicked = createAsyncThunk(
 export const followUnfollowButtonClickedOnFeedCard = createAsyncThunk(
   "authenticationSlice/followUnfollowButtonClicked",
   async (userId) => {
-    console.log("Id to be followed is...", userId);
+    
     const response = await axios({
       method: "POST",
       url: `${API_URL}/users-social/following`,
@@ -102,9 +97,8 @@ export const followUnfollowButtonClickedOnFeedCard = createAsyncThunk(
 export const authenticationSlice = createSlice({
   name: "authentication",
   initialState: {
-    // status: "idle",
+    state: "idle",
     name: "",
-    // userName: "",
     bio: "",
     followers: [],
     following: [],
@@ -133,10 +127,6 @@ export const authenticationSlice = createSlice({
       state.status = "fulfilled";
       state.userId = payload.userId;
       state.userName = payload.userName;
-      // state.name = payload.name;
-      // state.bio = payload.bio;
-      // state.followers = payload.followers;
-      // state.following = payload.following;
       state.token = payload.token;
       setupAuthHeaderForServiceCalls(payload.token);
       localStorage?.setItem(
@@ -144,16 +134,12 @@ export const authenticationSlice = createSlice({
         JSON.stringify({
           token: payload.token,
           userId: payload.userId,
-          // name: payload.name,
           userName: payload.userName,
-          // bio: payload.bio,
-          // followers: payload.followers,
-          // following: payload.following,
         })
       );
     },
     [loginWithCredentials.rejected]: (state, action) => {
-      console.log("in rejection", action);
+      
       state.status = "rejected";
     },
     [signUpButtonClicked.pending]: (state) => {
@@ -182,19 +168,17 @@ export const authenticationSlice = createSlice({
     [saveButtonClicked.pending]: (state) => {
       state.status = "loading";
     },
-    [saveButtonClicked.fulfilled]: (state, action) => {
+    [saveButtonClicked.fulfilled]: (state) => {
       state.status = "fulfilled";
-      console.log("save button clicked", action.payload);
     },
-    [saveButtonClicked.rejected]: (state, action) => {
+    [saveButtonClicked.rejected]: (state) => {
       state.status = "rejected";
-      console.log("save button clicked", action.payload);
     },
     [followUnfollowButtonClickedOnFeedCard.pending]: (state) => {
       state.status = "loading";
     },
     [followUnfollowButtonClickedOnFeedCard.fulfilled]: (state, action) => {
-      console.log("logging payload...", action.payload);
+      
       state.status = "fulfilled";
       if (state.following.includes(action.payload.idFollowed)) {
         state.following = state.following.filter(
@@ -204,16 +188,15 @@ export const authenticationSlice = createSlice({
         state.following.push(action.payload.idFollowed);
       }
     },
-    [followUnfollowButtonClickedOnFeedCard.rejected]: (state, action) => {
+    [followUnfollowButtonClickedOnFeedCard.rejected]: (state) => {
       state.status = "rejected";
-      console.log("follow button clicked", action.payload);
+    
     },
   },
 });
 
 export const { logOutButtonClicked } = authenticationSlice.actions;
 export default authenticationSlice.reducer;
-
 export const useAuth = () => {
   return useSelector((state) => state.auth);
 };

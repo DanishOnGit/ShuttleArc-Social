@@ -30,8 +30,8 @@ function App() {
 
   useEffect(() => {
     setupAuthExceptionHandler(dispatch);
-    dispatch(getAllSocialUsers())
-  }, [token,dispatch]);
+    dispatch(getAllSocialUsers());
+  }, [token, dispatch]);
 
   return (
     <div className="App">

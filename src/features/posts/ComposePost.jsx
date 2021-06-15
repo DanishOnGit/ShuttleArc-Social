@@ -13,7 +13,7 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { colors } from "../../database";
 import { useAuth } from "../authentication/authenticationSlice";
 import { postButtonClicked } from "./postSlice";
@@ -29,13 +29,13 @@ export const ComposePost = () => {
     <>
       <Button
         onClick={onOpen}
-        bgColor={colors.orange[600]}
+        bgColor="orange.600"
         _hover={{ bgColor: colors.orange[700] }}
         borderRadius="3rem"
         pl="3rem"
         pr="3rem"
       >
-        Serve
+        Compose
       </Button>
 
       <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
@@ -76,7 +76,7 @@ export const ComposePost = () => {
               pl="3rem"
               pr="3rem"
             >
-              Serve
+              Post
             </Button>
           </ModalFooter>
         </ModalContent>

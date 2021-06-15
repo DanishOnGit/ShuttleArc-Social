@@ -2,19 +2,16 @@ import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginWithCredentials } from "../authentication/authenticationSlice";
 import { useEffect, useRef, useState } from "react";
 import { colors } from "../../database";
-import { API_URL } from "../utils";
 
 export const Login = () => {
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const initialRef = useRef();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => initialRef.current.focus(), []);
@@ -56,7 +53,6 @@ export const Login = () => {
             _hover={{ bgColor: colors.orange[700] }}
             width="full"
             mt={4}
-          
           >
             Log In
           </Button>
