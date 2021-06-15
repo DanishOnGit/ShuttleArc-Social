@@ -11,12 +11,12 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  useFocusEffect,
+  
 } from "@chakra-ui/react";
-import { followButtonClicked, viewingUserProfile } from "../profile/profileSlice";
+import { followUnfollowButtonClicked, useProfile, viewingUserProfile } from "../profile/profileSlice";
 import { useAuth } from "../authentication/authenticationSlice";
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { checkIfAlreadyFollowing } from "../utils/checkIfAlreadyFollowing";
 
 export const getMonthAndDay = (date) => {
   const monthList = [
@@ -41,18 +41,11 @@ export const getMonthAndDay = (date) => {
 };
 
 export const FeedCard = ({ post }) => {
-  const profile = useSelector((state) => state.profile);
-  const { userName, token } = useAuth();
+
+  const profile = useProfile();
+  const { userName } = useAuth();
   const dispatch = useDispatch();
   console.log({ post });
-
-   const checkIfAlreadyFollowing = () => {
-    console.log("Running chcekIfAlradyFollowing", profile.following);
-    if (profile.following.find((id) => id == post.userId._id)) {
-      return "Unfollow";
-    }
-    return "Follow";
-  };
 
   return (
     <Box>
@@ -99,10 +92,10 @@ export const FeedCard = ({ post }) => {
                   />
                   <MenuList>
                     <MenuItem
-                      onClick={() => dispatch(followButtonClicked(post.userId))}
+                      // onClick={() => dispatch(followUnfollowButtonClicked(post.userId))}
                       icon={<AddIcon />}
                     >
-                      {checkIfAlreadyFollowing()}
+                      {checkIfAlreadyFollowing(profile,post)}
                     </MenuItem>
                   </MenuList>
                 </Menu>

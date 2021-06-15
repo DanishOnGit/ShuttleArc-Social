@@ -23,7 +23,7 @@ export const ComposePost = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef();
   const dispatch = useDispatch();
-  const { name, userName, userId } = useAuth();
+  const { name, userId } = useAuth();
 
   return (
     <>

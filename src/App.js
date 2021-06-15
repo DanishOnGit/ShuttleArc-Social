@@ -16,6 +16,8 @@ import {
   setupAuthHeaderForServiceCalls,
 } from "./features/utils";
 import { useDispatch } from "react-redux";
+import { PageNotFound } from "./features/publicRoute/PageNotFound";
+import { getAllSocialUsers } from "./features/profile/profileSlice";
 
 function App() {
   const { token } = useAuth();
@@ -28,7 +30,8 @@ function App() {
 
   useEffect(() => {
     setupAuthExceptionHandler(dispatch);
-  }, [token]);
+    dispatch(getAllSocialUsers())
+  }, [token,dispatch]);
 
   return (
     <div className="App">
@@ -41,7 +44,7 @@ function App() {
         <PublicRoute path="/signup" element={<Signup />} />
         <PublicRoute path="/shuttlearc-login" element={<ShuttleArcLogin />} />
         <PublicRoute path="/shuttlearc-signup" element={<ShuttleArcSignup />} />
-        
+        <PublicRoute path="/*" element={<PageNotFound />} />
       </Routes>
     </div>
   );

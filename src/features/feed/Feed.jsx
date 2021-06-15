@@ -1,26 +1,26 @@
-import { Box, Text } from "@chakra-ui/layout";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useRef, useState } from "react";
+
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
 import { FeedCard } from "./FeedCard";
-import { postButtonClicked, getAllPosts } from "../posts/postSlice";
-import { useAuth } from "../authentication/authenticationSlice";
+import {  getAllPosts, usePost } from "../posts/postSlice";
+import { loadUserDetails, useAuth } from "../authentication/authenticationSlice";
 import { Grid } from "@chakra-ui/layout";
 import { GridItem } from "@chakra-ui/layout";
 import { colors } from "../../database";
 import { Button } from "@chakra-ui/button";
-import { useDisclosure } from "@chakra-ui/hooks";
 import { ComposePost } from "../posts/ComposePost";
 import { ProfileHeader } from "../profile/ProfileHeader";
 import { getFollowingStatus } from "../profile/profileSlice";
 
 export const Feed = () => {
-  const { posts, status } = useSelector((state) => state.posts);
-  const { token, userName,name,bio } = useAuth();
+  const { posts } = usePost();
+  const { token, userName,name,bio,followers,following } = useAuth();
   console.log("From Feed..",name,bio,userName)
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (token) {
+      dispatch(loadUserDetails(userName))
       dispatch(getAllPosts());
       dispatch(getFollowingStatus())
     }
@@ -40,7 +40,7 @@ export const Feed = () => {
       </GridItem>
       <Grid templateColumns="1fr" rowGap="0.5rem">
         <GridItem>
-          <ProfileHeader name={name} userName={userName} bio={bio} />
+          <ProfileHeader name={name} userName={userName} bio={bio} followers={followers} following={following} />
         </GridItem>
         {posts.length !== 0 &&
           posts.map((post) => (

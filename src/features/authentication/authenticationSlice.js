@@ -6,9 +6,11 @@ import { API_URL, setupAuthHeaderForServiceCalls } from "../utils";
 export const getUserDetailsFromLocalStorage = () => {
   const userDetails = JSON.parse(localStorage.getItem("userDetails")) || {
     userId: null,
-    name: "",
+    // name: "",
     userName: "",
-    bio: "",
+    // bio: "",
+    // followers: [],
+    // following: [],
     token: null,
   };
   console.log({ userDetails });
@@ -40,26 +42,57 @@ export const loginWithCredentials = createAsyncThunk(
     }
   }
 );
-export const signUpButtonClicked=createAsyncThunk("authentication/signUpButtonClicked",async(signUpDetails)=>{
-  console.log(signUpDetails)
-  const response = await axios({
-    method:"POST",
-    url:`${API_URL}/users-social/signup`,
-    data:{
-        name:signUpDetails.name,
-        email:signUpDetails.userEmail,
-        password:signUpDetails.userPassword,
-        userName:signUpDetails.userName
-    }
-  })
+export const signUpButtonClicked = createAsyncThunk(
+  "authentication/signUpButtonClicked",
+  async (signUpDetails) => {
+    console.log(signUpDetails);
+    const response = await axios({
+      method: "POST",
+      url: `${API_URL}/users-social/signup`,
+      data: {
+        name: signUpDetails.name,
+        email: signUpDetails.userEmail,
+        password: signUpDetails.userPassword,
+        userName: signUpDetails.userName,
+      },
+    });
 
-  return response.data
-})
+    return response.data;
+  }
+);
+
+export const loadUserDetails = createAsyncThunk(
+  "authentication/loadUserDetails",
+  async (userName) => {
+    const response = await axios({
+      method: "GET",
+      url: `${API_URL}/users-social/${userName}/profile`,
+    });
+    return response.data;
+  }
+);
+
+export const saveButtonClicked = createAsyncThunk(
+  "profile/saveButtonClicked",
+  async (updatedData) => {
+    const response = await axios({
+      method: "POST",
+      url: `${API_URL}/users-social/profile`,
+      data: { ...updatedData },
+    });
+    return response.data;
+  }
+);
 
 export const authenticationSlice = createSlice({
   name: "authentication",
   initialState: {
     // status: "idle",
+    name: "",
+    // userName: "",
+    bio: "",
+    followers: [],
+    following: [],
     ...getUserDetailsFromLocalStorage(),
   },
   reducers: {
@@ -69,6 +102,8 @@ export const authenticationSlice = createSlice({
       state.userName = "";
       state.name = "";
       state.bio = "";
+      state.followers = [];
+      state.following = [];
       state.status = "idle";
       localStorage?.removeItem("userDetails");
       setupAuthHeaderForServiceCalls(null);
@@ -78,23 +113,27 @@ export const authenticationSlice = createSlice({
     [loginWithCredentials.pending]: (state) => {
       state.status = "loading";
     },
-    [loginWithCredentials.fulfilled]: (state, action) => {
-      console.log("In fulfilled", action);
+    [loginWithCredentials.fulfilled]: (state, { payload }) => {
+      console.log("In fulfilled");
       state.status = "fulfilled";
-      state.userId = action.payload.userId;
-      state.userName = action.payload.userName;
-      state.name = action.payload.name;
-      state.bio = action.payload.bio;
-      state.token = action.payload.token;
-      setupAuthHeaderForServiceCalls(action.payload.token);
+      state.userId = payload.userId;
+      state.userName = payload.userName;
+      // state.name = payload.name;
+      // state.bio = payload.bio;
+      // state.followers = payload.followers;
+      // state.following = payload.following;
+      state.token = payload.token;
+      setupAuthHeaderForServiceCalls(payload.token);
       localStorage?.setItem(
         "userDetails",
         JSON.stringify({
-          token: action.payload.token,
-          userId: action.payload.userId,
-          name: action.payload.name,
-          userName: action.payload.userName,
-          bio:action.payload.bio
+          token: payload.token,
+          userId: payload.userId,
+          // name: payload.name,
+          userName: payload.userName,
+          // bio: payload.bio,
+          // followers: payload.followers,
+          // following: payload.following,
         })
       );
     },
@@ -102,16 +141,41 @@ export const authenticationSlice = createSlice({
       console.log("in rejection", action);
       state.status = "rejected";
     },
+    [signUpButtonClicked.pending]: (state) => {
+      state.status = "loading";
+    },
+    [signUpButtonClicked.fulfilled]: (state) => {
+      state.status = "fulfilled";
+    },
+    [signUpButtonClicked.rejected]: (state) => {
+      state.status = "rejected";
+    },
+    [loadUserDetails.pending]: (state) => {
+      state.status = "loading";
+    },
+    [loadUserDetails.fulfilled]: (state, { payload }) => {
+      state.status = "fulfilled";
+      state.name = payload.name;
+      state.bio = payload.socialUser.bio;
+      state.userName = payload.socialUser.userName;
+      state.followers = payload.socialUser.followers;
+      state.following = payload.socialUser.following;
+    },
+    [loadUserDetails.rejected]: (state) => {
+      state.status = "rejected";
+    },
+    [saveButtonClicked.pending]: (state) => {
+      state.status = "loading";
+    },
+    [saveButtonClicked.fulfilled]: (state, action) => {
+      state.status = "fulfilled";
+      console.log("save button clicked", action.payload);
+    },
+    [saveButtonClicked.rejected]: (state, action) => {
+      state.status = "rejected";
+      console.log("save button clicked", action.payload);
+    },
   },
-  [signUpButtonClicked.pending]:(state)=>{
-    state.status="loading"
-  },
-  [signUpButtonClicked.fulfilled]:(state)=>{
-    state.status="fulfilled"
-  },
-  [signUpButtonClicked.rejected]:(state)=>{
-    state.status="rejected"
-  }
 });
 
 export const { logOutButtonClicked } = authenticationSlice.actions;

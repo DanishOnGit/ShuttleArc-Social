@@ -1,7 +1,7 @@
 import { Button } from "@chakra-ui/button";
 import { Input } from "@chakra-ui/input";
 import axios from "axios";
-import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
+import { Box, Flex, Heading } from "@chakra-ui/layout";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { useNavigate } from "react-router";
 import { API_URL } from "../utils";
