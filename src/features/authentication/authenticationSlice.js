@@ -73,12 +73,27 @@ export const loadUserDetails = createAsyncThunk(
 );
 
 export const saveButtonClicked = createAsyncThunk(
-  "profile/saveButtonClicked",
+  "authenticationSlice/saveButtonClicked",
   async (updatedData) => {
     const response = await axios({
       method: "POST",
       url: `${API_URL}/users-social/profile`,
       data: { ...updatedData },
+    });
+    return response.data;
+  }
+);
+
+export const followUnfollowButtonClickedOnFeedCard = createAsyncThunk(
+  "authenticationSlice/followUnfollowButtonClicked",
+  async (userId) => {
+    console.log("Id to be followed is...", userId);
+    const response = await axios({
+      method: "POST",
+      url: `${API_URL}/users-social/following`,
+      data: {
+        userId: userId._id,
+      },
     });
     return response.data;
   }
@@ -174,6 +189,24 @@ export const authenticationSlice = createSlice({
     [saveButtonClicked.rejected]: (state, action) => {
       state.status = "rejected";
       console.log("save button clicked", action.payload);
+    },
+    [followUnfollowButtonClickedOnFeedCard.pending]: (state) => {
+      state.status = "loading";
+    },
+    [followUnfollowButtonClickedOnFeedCard.fulfilled]: (state, action) => {
+      console.log("logging payload...", action.payload);
+      state.status = "fulfilled";
+      if (state.following.includes(action.payload.idFollowed)) {
+        state.following = state.following.filter(
+          (id) => id !== action.payload.idFollowed
+        );
+      } else {
+        state.following.push(action.payload.idFollowed);
+      }
+    },
+    [followUnfollowButtonClickedOnFeedCard.rejected]: (state, action) => {
+      state.status = "rejected";
+      console.log("follow button clicked", action.payload);
     },
   },
 });

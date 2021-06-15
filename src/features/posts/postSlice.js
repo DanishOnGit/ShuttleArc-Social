@@ -18,20 +18,20 @@ export const postButtonClicked = createAsyncThunk(
   }
 );
 
-export const followUnfollowButtonClickedOnFeedCard = createAsyncThunk(
-  "profile/followUnfollowButtonClicked",
-  async (userId) => {
-    console.log("Id to be followed is...", userId);
-    const response = await axios({
-      method: "POST",
-      url: `${API_URL}/users-social/following`,
-      data: {
-        userId: userId._id,
-      },
-    });
-    return response.data;
-  }
-);
+// export const followUnfollowButtonClickedOnFeedCard = createAsyncThunk(
+//   "profile/followUnfollowButtonClicked",
+//   async (userId) => {
+//     console.log("Id to be followed is...", userId);
+//     const response = await axios({
+//       method: "POST",
+//       url: `${API_URL}/users-social/following`,
+//       data: {
+//         userId: userId._id,
+//       },
+//     });
+//     return response.data;
+//   }
+// );
 
 export const getAllPosts = createAsyncThunk("post/getAllPosts", async () => {
   const response = await axios.get(`${API_URL}/posts`);

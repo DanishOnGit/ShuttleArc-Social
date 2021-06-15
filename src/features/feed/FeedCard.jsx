@@ -6,15 +6,12 @@ import { Box, Flex } from "@chakra-ui/layout";
 import { useDispatch, useSelector } from "react-redux";
 import { colors, fonts } from "../../database";
 import { likeButtonClicked } from "../posts/postSlice";
+import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
+import { useProfile, viewingUserProfile } from "../profile/profileSlice";
 import {
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  
-} from "@chakra-ui/react";
-import { followUnfollowButtonClicked, useProfile, viewingUserProfile } from "../profile/profileSlice";
-import { useAuth } from "../authentication/authenticationSlice";
+  followUnfollowButtonClickedOnFeedCard,
+  useAuth,
+} from "../authentication/authenticationSlice";
 import { Link } from "react-router-dom";
 import { checkIfAlreadyFollowing } from "../utils/checkIfAlreadyFollowing";
 
@@ -42,8 +39,8 @@ export const getMonthAndDay = (date) => {
 
 export const FeedCard = ({ post }) => {
 
-  const profile = useProfile();
-  const { userName } = useAuth();
+  // const profile = useProfile();
+  const { userName,following } = useAuth();
   const dispatch = useDispatch();
   console.log({ post });
 
@@ -59,7 +56,10 @@ export const FeedCard = ({ post }) => {
             <Flex mb="0.5rem" justifyContent="space-between">
               <Flex>
                 <Link to={`/${post.userId.userName}/profile`}>
-                  <Text onClick={()=>dispatch(viewingUserProfile(post.userId))} fontWeight={fonts.fontweight.bold}>
+                  <Text
+                    onClick={() => dispatch(viewingUserProfile(post.userId))}
+                    fontWeight={fonts.fontweight.bold}
+                  >
                     {" "}
                     {post.userId.userId.name}
                   </Text>
@@ -92,10 +92,14 @@ export const FeedCard = ({ post }) => {
                   />
                   <MenuList>
                     <MenuItem
-                      // onClick={() => dispatch(followUnfollowButtonClicked(post.userId))}
+                      onClick={() =>
+                        dispatch(
+                          followUnfollowButtonClickedOnFeedCard(post.userId)
+                        )
+                      }
                       icon={<AddIcon />}
                     >
-                      {checkIfAlreadyFollowing(profile,post)}
+                      {checkIfAlreadyFollowing(following,post.userId._id)}
                     </MenuItem>
                   </MenuList>
                 </Menu>
