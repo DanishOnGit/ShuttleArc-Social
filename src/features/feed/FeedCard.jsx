@@ -36,26 +36,24 @@ export const getMonthAndDay = (date) => {
 };
 
 export const FeedCard = ({ post }) => {
-
-  const { userName,following } = useAuth();
+  const { userName, following } = useAuth();
   const dispatch = useDispatch();
- 
+
   return (
     <Box>
-      <Box boxShadow='0px 0px 10px 4px rgb(0 0 0 / 5%)'mt="1.5rem" p="0.75rem">
+      <Box boxShadow="0px 0px 10px 4px rgb(0 0 0 / 5%)" mt="1.5rem" p="0.75rem">
         <Flex>
-        <Link to={`/${post.userId.userName}/profile`}><Avatar
-            name={post.userId.userId.name}
-            src="https://bit.ly/broken-link"
-          /></Link>
+          <Link to={`/${post.userId.userName}/profile`}>
+            <Avatar
+              name={post.userId.userId.name}
+              src="https://bit.ly/broken-link"
+            />
+          </Link>
           <Box textAlign="left" p="0rem 1rem">
             <Flex mb="0.5rem" justifyContent="space-between">
               <Flex>
                 <Link to={`/${post.userId.userName}/profile`}>
-                  <Text
-                    
-                    fontWeight={fonts.fontweight.bold}
-                  >
+                  <Text fontWeight={fonts.fontweight.bold}>
                     {" "}
                     {post.userId.userId.name}
                   </Text>
@@ -83,7 +81,7 @@ export const FeedCard = ({ post }) => {
                   <MenuButton
                     as={IconButton}
                     aria-label="Options"
-                    icon={<i class="fas fa-ellipsis-h"></i>}
+                    icon={<i className="fas fa-ellipsis-h"></i>}
                     variant="ghost"
                   />
                   <MenuList>
@@ -95,7 +93,7 @@ export const FeedCard = ({ post }) => {
                       }
                       icon={<AddIcon />}
                     >
-                      {checkIfAlreadyFollowing(following,post.userId._id)}
+                      {checkIfAlreadyFollowing(following, post.userId._id)}
                     </MenuItem>
                   </MenuList>
                 </Menu>
@@ -108,7 +106,7 @@ export const FeedCard = ({ post }) => {
               onClick={() => dispatch(likeButtonClicked(post._id))}
               color={post.isLikedByUser ? "red" : ""}
               aria-label="Search database"
-              icon={<i class="far fa-heart"></i>}
+              icon={<i className="far fa-heart"></i>}
             />
           </Box>
         </Flex>
@@ -116,4 +114,3 @@ export const FeedCard = ({ post }) => {
     </Box>
   );
 };
-

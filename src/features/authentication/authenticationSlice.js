@@ -16,7 +16,6 @@ export const loginWithCredentials = createAsyncThunk(
   "authentication/loginWithCredentials",
   async (userDetails, { rejectWithValue }) => {
     try {
-      
       const res = await axios({
         method: "POST",
         url: `${API_URL}/users-social/login`,
@@ -27,32 +26,83 @@ export const loginWithCredentials = createAsyncThunk(
       });
 
       if (res.status === 200) {
-        
         return res.data;
       }
       throw new Error("Error Occurred !");
     } catch (error) {
       console.log(error);
-      return rejectWithValue(error);
+      return rejectWithValue(error?.response?.data);
     }
   }
 );
 export const signUpButtonClicked = createAsyncThunk(
   "authentication/signUpButtonClicked",
-  async (signUpDetails) => {
-  
-    const response = await axios({
-      method: "POST",
-      url: `${API_URL}/users-social/signup`,
-      data: {
-        name: signUpDetails.name,
-        email: signUpDetails.userEmail,
-        password: signUpDetails.userPassword,
-        userName: signUpDetails.userName,
-      },
-    });
+  async (signUpDetails, { rejectWithValue }) => {
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${API_URL}/users-social/signup`,
+        data: {
+          name: signUpDetails.name,
+          email: signUpDetails.userEmail,
+          password: signUpDetails.userPassword,
+          userName: signUpDetails.userName,
+        },
+      });
+      if (response.status === 201) {
+        return response.data;
+      }
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 
-    return response.data;
+export const shuttleArcLoginButtonClicked = createAsyncThunk(
+  "authentication/shuttleArcLoginButtonClicked",
+  async (userDetails, { rejectWithValue }) => {
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${API_URL}/users-social/shuttlearc-login-authentication`,
+        headers: {
+          email: userDetails.userEmail,
+          password: userDetails.userPassword,
+        },
+      });
+      if (response.status === 200) {
+        return response.data;
+      }
+      if (response.status === 409) {
+        return response.data;
+      }
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const shuttleArcSignupButtonClicked = createAsyncThunk(
+  "authentication/shuttleArcSignupButtonClicked",
+  async (userDetails, { rejectWithValue }) => {
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${API_URL}/users-social/shuttlearc-signup`,
+        data: {
+          userName: userDetails.userName,
+          userId: userDetails.shuttleArcId,
+        },
+      });
+      if (response.status === 201) {
+        return response.data;
+      }
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 
@@ -82,7 +132,6 @@ export const saveButtonClicked = createAsyncThunk(
 export const followUnfollowButtonClickedOnFeedCard = createAsyncThunk(
   "authenticationSlice/followUnfollowButtonClicked",
   async (userId) => {
-    
     const response = await axios({
       method: "POST",
       url: `${API_URL}/users-social/following`,
@@ -97,9 +146,12 @@ export const followUnfollowButtonClickedOnFeedCard = createAsyncThunk(
 export const authenticationSlice = createSlice({
   name: "authentication",
   initialState: {
-    state: "idle",
+    status: "idle",
+    error: null,
     name: "",
     bio: "",
+    email: "",
+    shuttleArcId: "",
     followers: [],
     following: [],
     ...getUserDetailsFromLocalStorage(),
@@ -123,7 +175,6 @@ export const authenticationSlice = createSlice({
       state.status = "loading";
     },
     [loginWithCredentials.fulfilled]: (state, { payload }) => {
-      console.log("In fulfilled");
       state.status = "fulfilled";
       state.userId = payload.userId;
       state.userName = payload.userName;
@@ -139,17 +190,42 @@ export const authenticationSlice = createSlice({
       );
     },
     [loginWithCredentials.rejected]: (state, action) => {
-      
       state.status = "rejected";
+      state.error = action.payload;
+    },
+    [shuttleArcLoginButtonClicked.pending]: (state) => {
+      state.status = "loading";
+    },
+    [shuttleArcLoginButtonClicked.fulfilled]: (state, action) => {
+      state.status = "fulfilled";
+      state.name = action.payload.user.name;
+      state.email = action.payload.user.email;
+      state.shuttleArcId = action.payload.user._id;
+    },
+    [shuttleArcLoginButtonClicked.rejected]: (state, action) => {
+      state.status = "rejected";
+      state.error = action.payload;
+    },
+    [shuttleArcSignupButtonClicked.pending]: (state) => {
+      state.status = "loading";
+    },
+    [shuttleArcSignupButtonClicked.fulfilled]: (state) => {
+      state.status = "fulfilled";
+    },
+    [shuttleArcSignupButtonClicked.rejected]: (state, action) => {
+      state.status = "rejected";
+      state.error = action.payload;
     },
     [signUpButtonClicked.pending]: (state) => {
       state.status = "loading";
     },
+
     [signUpButtonClicked.fulfilled]: (state) => {
       state.status = "fulfilled";
     },
-    [signUpButtonClicked.rejected]: (state) => {
+    [signUpButtonClicked.rejected]: (state, action) => {
       state.status = "rejected";
+      state.error = action.payload;
     },
     [loadUserDetails.pending]: (state) => {
       state.status = "loading";
@@ -178,7 +254,6 @@ export const authenticationSlice = createSlice({
       state.status = "loading";
     },
     [followUnfollowButtonClickedOnFeedCard.fulfilled]: (state, action) => {
-      
       state.status = "fulfilled";
       if (state.following.includes(action.payload.idFollowed)) {
         state.following = state.following.filter(
@@ -190,7 +265,6 @@ export const authenticationSlice = createSlice({
     },
     [followUnfollowButtonClickedOnFeedCard.rejected]: (state) => {
       state.status = "rejected";
-    
     },
   },
 });

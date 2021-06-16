@@ -5,16 +5,23 @@ import { Input } from "@chakra-ui/input";
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
 import { colors } from "../../database";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { signUpButtonClicked } from "../authentication/authenticationSlice";
+import {
+  signUpButtonClicked,
+  useAuth,
+} from "../authentication/authenticationSlice";
+import { useToast } from "@chakra-ui/react";
 
 export const Signup = () => {
   const [name, setName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [userPassword, setUserPassword] = useState("");
+  const { status } = useAuth();
+  const toast = useToast();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   return (
@@ -33,7 +40,7 @@ export const Signup = () => {
               width="full"
               mt={4}
             >
-              Log In with ShuttleArc
+              Sign up with ShuttleArc
             </Button>
           </Link>
         </Box>
@@ -47,7 +54,7 @@ export const Signup = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               type="text"
-              placeholder="Dan jacobs"
+              placeholder="Danny"
               focusBorderColor={colors.orange[500]}
             />
           </FormControl>
@@ -57,7 +64,7 @@ export const Signup = () => {
               value={userEmail}
               onChange={(e) => setUserEmail(e.target.value)}
               type="email"
-              placeholder="test@test.com"
+              placeholder="danny@gmail.com"
               focusBorderColor={colors.orange[500]}
             />
           </FormControl>
@@ -82,21 +89,38 @@ export const Signup = () => {
             />
           </FormControl>
           <Button
-            onClick={() => {
-              dispatch(
+            isDisabled={!name || !userName || !userEmail || !userPassword}
+            isLoading={status === "loading"}
+            onClick={async () => {
+              const result = await dispatch(
                 signUpButtonClicked({ name, userName, userEmail, userPassword })
               );
-              setName("");
-              setUserEmail("");
-              setUserEmail("");
-              setUserPassword("");
+
+              console.log("Signup response", result);
+              toast({
+                title: `${
+                  result.payload.success
+                    ? "Signup successfull"
+                    : "Please try again"
+                }`,
+                description: `${result.payload.message}`,
+                status: `${result.payload.status}`,
+                duration: 2000,
+                isClosable: true,
+              });
+              if (result.payload.success) {
+                setName("");
+                setUserEmail("");
+                setUserName("");
+                setUserPassword("");
+                navigate("/");
+              }
             }}
             borderRadius="3rem"
             bgColor={colors.orange[600]}
             _hover={{ bgColor: colors.orange[700] }}
             width="full"
             mt={4}
-            type="submit"
           >
             Signup
           </Button>

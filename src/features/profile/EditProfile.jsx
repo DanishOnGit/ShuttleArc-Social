@@ -10,12 +10,11 @@ import {
   useAuth,
   saveButtonClicked,
 } from "../authentication/authenticationSlice";
-
 import { editProfileClicked } from "./profileSlice";
 import { useState } from "react";
 
 export const EditProfile = () => {
-  const { token, name, userName, bio } = useAuth();
+  const {status, token, name, userName, bio } = useAuth();
   const [newName, setNewName] = useState(name);
   const [newUserName, setNewUserName] = useState(userName);
   const [newBio, setNewBio] = useState(bio);
@@ -69,6 +68,7 @@ export const EditProfile = () => {
           Discard
         </Button>
         <Button
+        isLoading={status==="loading"}
           onClick={() =>
             dispatch(saveButtonClicked({ newName, newUserName, newBio }))
           }

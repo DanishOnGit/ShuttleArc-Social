@@ -4,15 +4,21 @@ import { Input } from "@chakra-ui/input";
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { loginWithCredentials } from "../authentication/authenticationSlice";
+import {
+  loginWithCredentials,
+  useAuth,
+} from "../authentication/authenticationSlice";
 import { useEffect, useRef, useState } from "react";
 import { colors } from "../../database";
+import { useToast } from "@chakra-ui/react";
 
 export const Login = () => {
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const initialRef = useRef();
+  const { status } = useAuth();
   const dispatch = useDispatch();
+  const toast = useToast();
 
   useEffect(() => initialRef.current.focus(), []);
   return (
@@ -44,9 +50,21 @@ export const Login = () => {
             />
           </FormControl>
           <Button
-            onClick={() => {
-              console.log("hello");
-              dispatch(loginWithCredentials({ userEmail, userPassword }));
+            isLoading={status === "loading"}
+            onClick={async () => {
+              const result = await dispatch(
+                loginWithCredentials({ userEmail, userPassword })
+              );
+
+              toast({
+                title: `${
+                  result.payload.success ? "Logged In" : "Please try again"
+                }`,
+                description: `${result.payload.message}`,
+                status: `${result.payload.status}`,
+                duration: 2000,
+                isClosable: true,
+              });
             }}
             borderRadius="3rem"
             bgColor={colors.orange[600]}
