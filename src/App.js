@@ -5,6 +5,8 @@ import { Login } from "./features/login/Login";
 import { Signup } from "./features/signup/Signup";
 import { EditProfile } from "./features/profile/EditProfile";
 import { UserProfile } from "./features/profile/UserProfile";
+import { FollowingList } from "./features/lists/FollowingList";
+import { FollowersList } from "./features/lists/FollowersList";
 import { ShuttleArcSignup } from "./features/signup/ShuttleArcSignup";
 import { ShuttleArcLogin } from "./features/login/ShuttleArcLogin";
 import { Feed } from "./features/feed/Feed";
@@ -40,6 +42,8 @@ function App() {
         <PrivateRoute path="/home" element={<Feed />} />
         <PrivateRoute path="/edit-Profile" element={<EditProfile />} />
         <PrivateRoute path="/:userName/profile" element={<UserProfile />} />
+        <PrivateRoute path="/me/following" element={<FollowingList />} />
+        <PrivateRoute path="/me/followers" element={<FollowersList />} />
         <PublicRoute path="/" element={<Login />} />
         <PublicRoute path="/signup" element={<Signup />} />
         <PublicRoute path="/shuttlearc-login" element={<ShuttleArcLogin />} />

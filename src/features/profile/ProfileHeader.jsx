@@ -76,11 +76,23 @@ export const ProfileHeader = ({
             </Flex>
             <Flex>
               <Text>
-                {postCount}
+                <Text as="span" fontWeight="semibold">
+                  {postCount}
+                </Text>{" "}
                 Posts
               </Text>
-              <Text m="0 1rem">{following.length} Following</Text>
-              <Text>{followers.length} Followers</Text>
+              <Text m="0 1rem">
+                <Text as="span" fontWeight="semibold">
+                  {following.length}
+                </Text>{" "}
+                Following
+              </Text>
+              <Text>
+                <Text as="span" fontWeight="semibold">
+                  {followers.length}
+                </Text>{" "}
+                Followers
+              </Text>
             </Flex>
             <Flex mt="1rem">
               <Text>{bio}</Text>

@@ -132,6 +132,7 @@ export const saveButtonClicked = createAsyncThunk(
 export const followUnfollowButtonClickedOnFeedCard = createAsyncThunk(
   "authenticationSlice/followUnfollowButtonClicked",
   async (userId) => {
+    console.log({ userId });
     const response = await axios({
       method: "POST",
       url: `${API_URL}/users-social/following`,
@@ -142,6 +143,35 @@ export const followUnfollowButtonClickedOnFeedCard = createAsyncThunk(
     return response.data;
   }
 );
+
+export const followingButtonClickedInProfileMenu = createAsyncThunk(
+  "authentication/followingButtonClickedInProfileMenu",
+  async () => {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API_URL}/users-social/following`,
+      });
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const followersButtonClickedInProfileMenu=createAsyncThunk("authentication/followersButtonClickedInProfileMenu",async()=>{
+  try{
+   const response=await axios({
+     method:"GET",
+     url:`${API_URL}/users-social/followers`
+   })
+  
+   return response.data
+  }catch(error){
+    console.log(error)
+  }
+ })
 
 export const authenticationSlice = createSlice({
   name: "authentication",
@@ -266,6 +296,26 @@ export const authenticationSlice = createSlice({
     [followUnfollowButtonClickedOnFeedCard.rejected]: (state) => {
       state.status = "rejected";
     },
+    [followingButtonClickedInProfileMenu.pending]: (state) => {
+      state.status = "loading";
+    },
+    [followingButtonClickedInProfileMenu.fulfilled]: (state, action) => {
+      state.status = "fulfilled";
+      state.following = action.payload.following;
+    },
+    [followingButtonClickedInProfileMenu.rejected]: (state) => {
+      state.status = "rejected";
+    },
+    [followersButtonClickedInProfileMenu.pending]:(state)=>{
+      state.status="loading"
+    },
+    [followersButtonClickedInProfileMenu.fulfilled]:(state,action)=>{
+      state.status="fulfilled"
+      state.followers=action.payload.followers
+    },
+    [followersButtonClickedInProfileMenu.rejected]:(state)=>{
+      state.status="rejected"
+    }
   },
 });
 

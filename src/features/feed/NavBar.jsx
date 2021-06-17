@@ -62,7 +62,9 @@ export const NavBar = () => {
     >
       <Box>
         <Link to="/home">
-          <Text fontWeight="bold">LOGO</Text>
+          <Text fontWeight="bold" color="orange.500">
+            LOGO
+          </Text>
         </Link>
       </Box>
 
@@ -76,7 +78,7 @@ export const NavBar = () => {
             width="40%"
             placeholder="Search Users"
             size="sm"
-            focusBorderColor={colors.orange[500]}
+            focusBorderColor="orange.500"
           />
         </PopoverTrigger>
         <PopoverContent>
@@ -110,11 +112,17 @@ export const NavBar = () => {
           Profile
         </MenuButton>
         <MenuList>
+          <Link to="/me/following">
+            <MenuItem>Following</MenuItem>
+          </Link>
+          <Link to="/me/followers">
+            <MenuItem>Followers</MenuItem>
+          </Link>
           <MenuDivider />
           <MenuItem
             onClick={() => dispatch(logOutButtonClicked())}
             as={Button}
-            focusBorderColor={colors.orange[500]}
+            focusBorderColor="orange.500"
           >
             Log Out
           </MenuItem>

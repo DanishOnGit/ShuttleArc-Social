@@ -1,22 +1,24 @@
 import { Avatar } from "@chakra-ui/avatar";
 import { Text } from "@chakra-ui/layout";
 import { Box, Flex } from "@chakra-ui/layout";
+import { Divider } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { colors, fonts } from "../../database";
 
 export const BasicProfileCard = ({ user }) => {
-  
+  console.log({user})
   return (
-    <Flex>
-      <Avatar name={user.userId.name} src="https://bit.ly/broken-link" />
+    <>
+    <Flex m="0.5rem">
+      <Avatar name={user?.userId?.name} src="https://bit.ly/broken-link" />
       <Box textAlign="left" p="0rem 1rem">
         <Flex>
-          <Link to={`/${user.userName}/profile`}>
+          <Link to={`/${user?.userName}/profile`}>
             <Text
               fontWeight={fonts.fontweight.bold}
             >
               {" "}
-              {user.userId.name}
+              {user?.userId?.name}
             </Text>
           </Link>
           <Text
@@ -30,5 +32,7 @@ export const BasicProfileCard = ({ user }) => {
         </Flex>
       </Box>
     </Flex>
+    <Divider/>
+    </>
   );
 };

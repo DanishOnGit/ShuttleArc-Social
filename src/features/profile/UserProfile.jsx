@@ -46,7 +46,7 @@ export const UserProfile = () => {
           </GridItem>
           {posts.length !== 0 &&
             posts.map((post) => (
-              <GridItem colSpan={4}>
+              <GridItem colSpan={4} key={post._id}>
                 <FeedCard post={post} />
               </GridItem>
             ))}
