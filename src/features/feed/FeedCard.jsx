@@ -103,10 +103,12 @@ export const FeedCard = ({ post }) => {
               <Text mb="0.5rem">{post.content}</Text>
             </Box>
             <IconButton
+              variant="ghost"
+              textDecoration="none"
               onClick={() => dispatch(likeButtonClicked(post._id))}
               color={post.isLikedByUser ? "red" : ""}
               aria-label="Search database"
-              icon={<i className="far fa-heart"></i>}
+              icon={<i className="fas fa-heart"></i>}
             />
           </Box>
         </Flex>
