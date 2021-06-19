@@ -9,6 +9,7 @@
 * View others profile and timeline
 * Follow/Unfollow users
 * Search users and view profile
+* View Notifications
 
 ## Stack used:
 * React,Redux toolkit, Express, MongoDb, Mongoose, Chakra UI
