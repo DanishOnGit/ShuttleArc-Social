@@ -56,7 +56,7 @@ export const NavBar = () => {
       zIndex="2"
       p="1rem 0"
       position="sticky"
-      maxWidth="66vw"
+      maxWidth={{ md: "67rem", base: "100vw" }}
       margin="auto"
       justifyContent="space-between"
     >
@@ -118,6 +118,11 @@ export const NavBar = () => {
           <Link to="/me/followers">
             <MenuItem>Followers</MenuItem>
           </Link>
+          <Link to="/me/notifications">
+            {" "}
+            <MenuItem>Notifications</MenuItem>
+          </Link>
+
           <MenuDivider />
           <MenuItem
             onClick={() => dispatch(logOutButtonClicked())}

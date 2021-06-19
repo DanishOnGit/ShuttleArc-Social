@@ -103,6 +103,8 @@ export const FeedCard = ({ post }) => {
               <Text mb="0.5rem">{post.content}</Text>
             </Box>
             <IconButton
+            _focus={{outline:"none"}}
+            _hover={{backgroundColor:"transparent"}}
               variant="ghost"
               textDecoration="none"
               onClick={() => dispatch(likeButtonClicked(post._id))}

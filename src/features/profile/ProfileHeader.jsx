@@ -74,7 +74,7 @@ export const ProfileHeader = ({
                 </Button>
               )}
             </Flex>
-            <Flex>
+            <Flex wrap="wrap">
               <Text>
                 <Text as="span" fontWeight="semibold">
                   {postCount}

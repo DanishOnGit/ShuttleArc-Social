@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { API_URL } from "../utils";
+import { likeButtonClicked } from "../posts/postSlice";
 
 export const getAllSocialUsers = createAsyncThunk(
   "profile/getAllSocialUsers",
@@ -85,6 +86,22 @@ export const profileSlice = createSlice({
     [editProfileClicked.rejected]: (state, action) => {
       state.status = "rejected";
     },
+    // [likeButtonClicked.pending]: (state) => {
+    //   state.status = "loading";
+    // },
+    [likeButtonClicked.fulfilled]: (state, action) => {
+      state.status = "fulfilled";
+      const postIndex = state.posts.findIndex(
+        (post) => post._id === action.payload
+      );
+      if (postIndex !== -1) {
+        state.posts[postIndex].isLikedByUser =
+          !state.posts[postIndex].isLikedByUser;
+      }
+    },
+    // [likeButtonClicked.rejected]: (state) => {
+    //   state.status = "rejected";
+    // },
 
     [followUnfollowButtonClickedOnProfileHeader.pending]: (state) => {
       state.status = "loading";

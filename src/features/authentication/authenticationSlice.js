@@ -280,11 +280,9 @@ export const authenticationSlice = createSlice({
     [saveButtonClicked.rejected]: (state) => {
       state.status = "rejected";
     },
-    [followUnfollowButtonClickedOnFeedCard.pending]: (state) => {
-      state.status = "loading";
-    },
+    
     [followUnfollowButtonClickedOnFeedCard.fulfilled]: (state, action) => {
-      state.status = "fulfilled";
+      
       if (state.following.includes(action.payload.idFollowed)) {
         state.following = state.following.filter(
           (id) => id !== action.payload.idFollowed
@@ -293,18 +291,16 @@ export const authenticationSlice = createSlice({
         state.following.push(action.payload.idFollowed);
       }
     },
-    [followUnfollowButtonClickedOnFeedCard.rejected]: (state) => {
-      state.status = "rejected";
+    [followUnfollowButtonClickedOnFeedCard.rejected]: (state,action) => {
+      console.log(action.error.message)
     },
-    [followingButtonClickedInProfileMenu.pending]: (state) => {
-      state.status = "loading";
-    },
+    
     [followingButtonClickedInProfileMenu.fulfilled]: (state, action) => {
       state.status = "fulfilled";
       state.following = action.payload.following;
     },
-    [followingButtonClickedInProfileMenu.rejected]: (state) => {
-      state.status = "rejected";
+    [followingButtonClickedInProfileMenu.rejected]: (state,action) => {
+     console.log(action.error.message)
     },
     [followersButtonClickedInProfileMenu.pending]:(state)=>{
       state.status="loading"

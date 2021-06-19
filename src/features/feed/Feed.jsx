@@ -40,10 +40,10 @@ export const Feed = () => {
         />
       ) : (
         
-        <Grid maxWidth="66vw" margin="auto" templateColumns="1fr 5fr" gap={4}>
+        <Grid maxWidth={{md:"67rem",base:"100vw"}} margin="auto" templateColumns={{md:"1fr 5fr",base:"1fr"}} gap={4}>
           <GridItem
             position="sticky"
-            display="flex"
+            display={{md:"flex",base:"none"}}
             flexDirection="column"
             padding="1rem"
             colSpan={1}

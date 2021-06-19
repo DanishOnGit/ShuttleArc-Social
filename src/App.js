@@ -7,6 +7,7 @@ import { EditProfile } from "./features/profile/EditProfile";
 import { UserProfile } from "./features/profile/UserProfile";
 import { FollowingList } from "./features/lists/FollowingList";
 import { FollowersList } from "./features/lists/FollowersList";
+import { Notifications } from "./features/notifications/Notifications";
 import { ShuttleArcSignup } from "./features/signup/ShuttleArcSignup";
 import { ShuttleArcLogin } from "./features/login/ShuttleArcLogin";
 import { Feed } from "./features/feed/Feed";
@@ -21,6 +22,7 @@ import {
 import { useDispatch } from "react-redux";
 import { PageNotFound } from "./features/publicRoute/PageNotFound";
 import { getAllSocialUsers } from "./features/profile/profileSlice";
+import { getNotifications } from "./features/notifications/notificationSlice";
 
 function App() {
   const { token } = useAuth();
@@ -33,6 +35,7 @@ function App() {
   useEffect(() => {
     setupAuthExceptionHandler(dispatch);
     dispatch(getAllSocialUsers());
+    dispatch(getNotifications());
   }, [token, dispatch]);
 
   return (
@@ -44,6 +47,7 @@ function App() {
         <PrivateRoute path="/:userName/profile" element={<UserProfile />} />
         <PrivateRoute path="/me/following" element={<FollowingList />} />
         <PrivateRoute path="/me/followers" element={<FollowersList />} />
+        <PrivateRoute path="/me/notifications" element={<Notifications />} />
         <PublicRoute path="/" element={<Login />} />
         <PublicRoute path="/signup" element={<Signup />} />
         <PublicRoute path="/shuttlearc-login" element={<ShuttleArcLogin />} />

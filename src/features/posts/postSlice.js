@@ -23,13 +23,17 @@ export const getAllPosts = createAsyncThunk("post/getAllPosts", async () => {
   return response.data;
 });
 
-export const likeButtonClicked=createAsyncThunk("post/likeButtonClicked",async(postId)=>{
-   await axios ({
-    method:"POST",
-    url:`${API_URL}/posts/${postId}`
-  })
-  return postId
-})
+export const likeButtonClicked = createAsyncThunk(
+  "post/likeButtonClicked",
+  async (postId) => {
+    console.log("Liked btn clicked")
+    await axios({
+      method: "POST",
+      url: `${API_URL}/posts/${postId}`,
+    });
+    return postId;
+  }
+);
 
 export const postSlice = createSlice({
   name: "post",
@@ -65,16 +69,21 @@ export const postSlice = createSlice({
     },
     [likeButtonClicked.fulfilled]: (state, action) => {
       state.status = "fulfilled";
-      const postIndex = state.posts.findIndex(post=>post._id===action.payload)
-      state.posts[postIndex].isLikedByUser = !state.posts[postIndex].isLikedByUser
+      const postIndex = state.posts.findIndex(
+        (post) => post._id === action.payload
+      );
+      if (postIndex !== -1) {
+        state.posts[postIndex].isLikedByUser =
+          !state.posts[postIndex].isLikedByUser;
+      }
     },
     [likeButtonClicked.rejected]: (state) => {
       state.status = "rejected";
     },
   },
 });
-export const usePost=()=>{
-  return useSelector(state=>state.posts)
-}
+export const usePost = () => {
+  return useSelector((state) => state.posts);
+};
 export const { postButtonPressed } = postSlice.actions;
 export default postSlice.reducer;

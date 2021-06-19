@@ -13,6 +13,7 @@ export const UserProfile = () => {
   const { userName } = useParams();
 
   useEffect(() => {
+    console.log("useffect in veiwing profile...")
     dispatch(viewingUserProfile({ userName }));
     return dispatch(resetProfile());
   }, [dispatch, userName]);
