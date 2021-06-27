@@ -31,7 +31,7 @@ export const ProfileHeader = ({
     <Box textAlign="left" p="5rem 0.5rem 2rem">
       <Box>
         <Flex>
-          <Avatar size="2xl" name={name} src="https://bit.ly/broken-link" />
+          <Avatar size="2xl" name={name} src="https://bit.ly/broken-link"/>
           <Box ml="1rem">
             <Flex mb="0.5rem">
               <Box>

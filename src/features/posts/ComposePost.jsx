@@ -11,6 +11,8 @@ import {
   Avatar,
   Flex,
   Box,
+  IconButton,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -24,19 +26,33 @@ export const ComposePost = () => {
   const initialRef = useRef();
   const dispatch = useDispatch();
   const { name, userId } = useAuth();
+  const variant = useBreakpointValue({ base: "Icon", md: "Compose" });
 
   return (
     <>
-      <Button
-        onClick={onOpen}
-        bgColor="orange.600"
-        _hover={{ bgColor: colors.orange[700] }}
-        borderRadius="3rem"
-        pl="3rem"
-        pr="3rem"
-      >
-        Compose
-      </Button>
+      {variant === "Icon" ? (
+        <IconButton
+          variant="solid"
+          onClick={onOpen}
+          bgColor="orange.600"
+          _hover={{ bgColor: colors.orange[700] }}
+          borderRadius={{ base: "50%", md: "3rem" }}
+          fontSize="20px"
+          p="2rem 1.5rem"
+          icon={<i class="fas fa-pen"></i>}
+        />
+      ) : (
+        <Button
+          onClick={onOpen}
+          bgColor="orange.600"
+          _hover={{ bgColor: colors.orange[700] }}
+          borderRadius={{ base: "50%", md: "3rem" }}
+          pl="3rem"
+          pr="3rem"
+        >
+          {variant}
+        </Button>
+      )}
 
       <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -65,9 +81,8 @@ export const ComposePost = () => {
               onClick={() => {
                 dispatch(postButtonClicked({ postContent, userId }));
                 setPostContent("");
-                onClose()
+                onClose();
               }}
-              
               isDisabled={!postContent ? true : false}
               bgColor={colors.orange[600]}
               _hover={{ bgColor: colors.orange[700] }}

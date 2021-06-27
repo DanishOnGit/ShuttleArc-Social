@@ -1,10 +1,10 @@
 import {
   Box,
   Flex,
-  Text,
   Input,
   Button,
   useDisclosure,
+  Image,
 } from "@chakra-ui/react";
 import {
   Menu,
@@ -23,6 +23,7 @@ import {
   PopoverCloseButton,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
+import logo from "../images/logo-black.svg";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { logOutButtonClicked } from "../authentication/authenticationSlice";
@@ -59,12 +60,11 @@ export const NavBar = () => {
       maxWidth={{ md: "67rem", base: "100vw" }}
       margin="auto"
       justifyContent="space-between"
+      alignItems="center"
     >
       <Box>
         <Link to="/home">
-          <Text fontWeight="bold" color="orange.500">
-            LOGO
-          </Text>
+          <Image src={logo} boxSize="80px" alt="logo" />
         </Link>
       </Box>
 
@@ -78,6 +78,7 @@ export const NavBar = () => {
             width="40%"
             placeholder="Search Users"
             size="sm"
+            borderRadius="3rem"
             focusBorderColor="orange.500"
           />
         </PopoverTrigger>
