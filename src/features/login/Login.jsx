@@ -82,6 +82,36 @@ export const Login = () => {
             <Link to="/signup">Signup</Link>
           </Text>
         </Text>
+        <Box>
+          <Text>-----------OR-----------</Text>
+        <Button
+            isLoading={status === "loading"}
+            onClick={async () => {
+              setUserEmail("danny@gmail.com");
+              setUserPassword("Danny@123");
+              const result = await dispatch(
+                loginWithCredentials({ userEmail:"danny@gmail.com", userPassword:"Danny@123" })
+              );
+
+              toast({
+                title: `${
+                  result.payload.success ? "Logged In" : "Please try again"
+                }`,
+                description: `${result.payload.message}`,
+                status: `${result.payload.status}`,
+                duration: 2000,
+                isClosable: true,
+              });
+            }}
+            borderRadius="3rem"
+            border="1px solid red"
+            _hover={{ bgColor: colors.orange[700] }}
+            width="full"
+            mt={4}
+          >
+            Use Test Credentials
+          </Button>
+        </Box>
       </Box>
     </Flex>
   );
