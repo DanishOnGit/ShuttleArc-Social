@@ -11,8 +11,8 @@ export const Notifications = () => {
 
   return (
     <>
-      <Text fontSize="2xl">Notifications</Text>
-      <Flex maxWidth="66vw" m="auto" direction="column">
+      <Text fontSize="2xl" mb={{base:"1rem",md:"2rem"}}>Notifications</Text>
+      <Flex maxWidth={{base:"100vw",md:"66vw"}} m="auto" direction="column">
         {notifications.map((notification) => (
           <>
             <Flex m="0.5rem">

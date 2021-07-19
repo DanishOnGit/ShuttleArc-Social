@@ -55,7 +55,7 @@ export const NavBar = () => {
   return (
     <Flex
       zIndex="2"
-      p="1rem 0"
+      p={{base:"1rem 0.5rem",md:"1rem 0"}}
       position="sticky"
       maxWidth={{ md: "67rem", base: "100vw" }}
       margin="auto"

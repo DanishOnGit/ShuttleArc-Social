@@ -11,6 +11,7 @@ import {
   followUnfollowButtonClickedOnProfileHeader,
   useProfile,
 } from "./profileSlice";
+import { useBreakpointValue } from "@chakra-ui/react"
 
 export const ProfileHeader = ({
   name,
@@ -23,15 +24,16 @@ export const ProfileHeader = ({
   const { socialId } = useProfile();
   const { userName: currUsersUserName, userId } = useAuth();
   const dispatch = useDispatch();
+  const size = useBreakpointValue({base:"lg",md:"2xl"})
 
   const checkIfAlreadyFollowing = (currentUsersUserId) => {
     return followers.find((id) => id === currentUsersUserId) ? true : false;
   };
   return (
-    <Box textAlign="left" p="5rem 0.5rem 2rem">
+    <Box textAlign="left" p={{base:"2rem 0.5rem 1rem",md:"5rem 0.5rem 2rem"}} maxWidth="100vw">
       <Box>
         <Flex>
-          <Avatar size="2xl" name={name} src="https://bit.ly/broken-link"/>
+          <Box flexGrow={{base:2,md:0}} ><Avatar size={size}  name={name} src="https://bit.ly/broken-link"/></Box>
           <Box ml="1rem">
             <Flex mb="0.5rem">
               <Box>

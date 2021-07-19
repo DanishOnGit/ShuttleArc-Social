@@ -41,7 +41,7 @@ export const FeedCard = ({ post }) => {
 
   return (
     <Box>
-      <Box boxShadow="0px 0px 10px 4px rgb(0 0 0 / 5%)" mt="1.5rem" p="0.75rem">
+      <Box boxShadow="0px 0px 10px 4px rgb(0 0 0 / 5%)" mt="1.5rem" p="0.75rem" maxWidth="100vw">
         <Flex>
           <Link to={`/${post.userId.userName}/profile`}>
             <Avatar

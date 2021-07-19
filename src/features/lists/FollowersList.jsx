@@ -25,8 +25,8 @@ export const FollowersList = () => {
         />
       ) : (
         <>
-          <Text fontSize="2xl">Your Followers</Text>
-          <Flex maxWidth="66vw" m="auto" direction="column">
+          <Text fontSize="2xl" mb={{base:"1rem",md:"2rem"}}>Your Followers</Text>
+          <Flex maxWidth={{base:"100vw",md:"66vw"}} m="auto" direction="column">
             {followers.map((user) => (
               <BasicProfileCard user={user} />
             ))}

@@ -30,8 +30,8 @@ export const FollowingList = () => {
         />
       ) : (
         <>
-          <Text fontSize="2xl">People you Follow</Text>
-          <Flex maxWidth="66vw" m="auto" direction="column">
+          <Text fontSize="2xl" mb={{base:"1rem",md:"2rem"}}>People you Follow</Text>
+          <Flex maxWidth={{base:"100vw",md:"66vw"}} m="auto" direction="column">
             {following.length!==0 &&
               following.map((user) => <BasicProfileCard user={user} />)}
           </Flex>
