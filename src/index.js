@@ -9,7 +9,6 @@ import { colors, fonts } from "./database";
 import * as serviceWorker from "./serviceWorker";
 const theme = extendTheme({ colors, fonts });
 
-console.log(store.getState());
 
 ReactDOM.render(
   <React.StrictMode>
